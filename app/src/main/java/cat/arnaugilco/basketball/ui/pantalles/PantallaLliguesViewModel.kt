@@ -24,21 +24,16 @@ class PantallaLliguesViewModel(savedStateHandle: SavedStateHandle) : ViewModel()
 
     init {
         val idPais = savedStateHandle.toRoute<DestLeagues>()
-        Log.d("DEBUG_LLIGUES", "ViewModel init - countryId rebut: '${idPais.countryId}'")
         obtenLliguesDelPais(idPais.countryId)
     }
 
     fun obtenLliguesDelPais(idPais: String) {
-        Log.d("DEBUG_LLIGUES", "Cridant API amb countryId: '$idPais'")
         viewModelScope.launch {
             apiHelper.getBasketballLeaguesFlow(contryId = idPais)
                 .onStart {
-                    Log.d("DEBUG_LLIGUES", "Flow iniciat - estaCarregant = true")
                     _estat.update { it.copy(estaCarregant = true) }
                 }
                 .catch { error ->
-                    Log.e("DEBUG_LLIGUES", "ERROR: ${error::class.simpleName} - ${error.message}")
-                    Log.e("DEBUG_LLIGUES", "Causa: ${error.cause}")
                     _estat.update {
                         it.copy(
                             estaCarregant = false,
