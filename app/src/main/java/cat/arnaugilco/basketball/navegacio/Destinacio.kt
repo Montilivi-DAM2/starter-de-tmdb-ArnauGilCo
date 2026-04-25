@@ -1,6 +1,7 @@
 package cat.arnaugilco.basketball.navegacio
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Adb
 import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.Build
@@ -8,6 +9,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.SportsBasketball
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Adb
 import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Flag
@@ -32,6 +34,15 @@ object DestSteps
 object DestAbout
 
 @Serializable
+object DestinacioPerfil
+
+@Serializable
+object DestiLogin
+
+@Serializable
+object DestinacioRegistre
+
+@Serializable
 object DestCountrySelection
 
 @Serializable
@@ -48,6 +59,7 @@ data class EtiquetaDelDrawer<T:Any>(val ruta:T, val iconaNoSeleccionada:ImageVec
 val etiquetesDelDrawer = listOf(
     EtiquetaDelDrawer(DestLandingPage, iconaNoSeleccionada = Icons.Outlined.Home, iconaSeleccionada = Icons.Filled.Home, titol = "Portada"),
     EtiquetaDelDrawer(DestCountrySelection, iconaNoSeleccionada = Icons.Outlined.SportsBasketball, iconaSeleccionada = Icons.Filled.SportsBasketball, titol = "Bàsquet"),
+    EtiquetaDelDrawer(DestinacioPerfil, iconaNoSeleccionada =Icons.Outlined.AccountCircle, iconaSeleccionada = Icons.Filled.AccountCircle, "Perfil"),
     EtiquetaDelDrawer(DestPreferences, iconaNoSeleccionada = Icons.Outlined.Build, iconaSeleccionada = Icons.Filled.Build, titol = "Preferències"),
     EtiquetaDelDrawer(DestSteps, iconaNoSeleccionada = Icons.Outlined.Info, iconaSeleccionada = Icons.Filled.Info, titol = "Instruccions"),
     EtiquetaDelDrawer(DestAbout, iconaNoSeleccionada = Icons.Outlined.Adb, iconaSeleccionada = Icons.Filled.Adb, titol = "Quant a..."),

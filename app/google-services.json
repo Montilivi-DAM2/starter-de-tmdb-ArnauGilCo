@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "211261587038",
+    "project_id": "tascaclasse-arnau",
+    "storage_bucket": "tascaclasse-arnau.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211261587038:android:9707a9cfcfee5688fe7ecf",
+        "android_client_info": {
+          "package_name": "cat.arnaugilco.basketball"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnHMoC4aQDAKKBE7Vq-6amByGatsU_9sQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211261587038:android:84c098b838c51b90fe7ecf",
+        "android_client_info": {
+          "package_name": "cat.arnaugilco.tascaclasse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnHMoC4aQDAKKBE7Vq-6amByGatsU_9sQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

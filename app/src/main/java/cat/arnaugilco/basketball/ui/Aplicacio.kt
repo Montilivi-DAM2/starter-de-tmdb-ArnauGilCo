@@ -44,6 +44,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cat.arnaugilco.basketball.R
+import cat.arnaugilco.basketball.dades.autenticacio.ControladorDAutenticacio
 import cat.arnaugilco.basketball.navegacio.DestAbout
 import cat.arnaugilco.basketball.navegacio.DestCountrySelection
 import cat.arnaugilco.basketball.navegacio.DestLandingPage
@@ -52,6 +53,8 @@ import cat.arnaugilco.basketball.navegacio.DestPlayers
 import cat.arnaugilco.basketball.navegacio.DestPreferences
 import cat.arnaugilco.basketball.navegacio.DestSteps
 import cat.arnaugilco.basketball.navegacio.DestTeams
+import cat.arnaugilco.basketball.navegacio.DestiLogin
+import cat.arnaugilco.basketball.navegacio.DestinacioPerfil
 import cat.arnaugilco.basketball.navegacio.GrafDeNavegacio
 import cat.arnaugilco.basketball.navegacio.etiquetesDelDrawer
 import cat.arnaugilco.basketball.ui.theme.BasketballTheme
@@ -62,6 +65,7 @@ import kotlinx.coroutines.launch
 // DestLeagues, DestTeams i DestPlayers NO estan aquí → mostraran la fletxa enrere
 val pantallesAmbDrawer = listOf(
     DestCountrySelection::class,
+    DestinacioPerfil::class,
     DestPreferences::class,
     DestLandingPage::class,
     DestSteps::class,
@@ -77,17 +81,17 @@ fun PantallaDAplicacio(content: @Composable () -> Unit) {
     }
 }
 
-@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Aplicacio() {
+fun Aplicacio(controladorDAutenticacio: ControladorDAutenticacio) {
+
     val controladorDeNavegacio = rememberNavController()
     val ambitCorrutina: CoroutineScope = rememberCoroutineScope()
     val estatDrawer = rememberDrawerState(initialValue = DrawerValue.Closed)
     val rutaActual by controladorDeNavegacio.currentBackStackEntryAsState()
     val destinacioActual = rutaActual?.destination
 
-    CalaixDeNavegacio(controladorDeNavegacio, rutaActual, destinacioActual, estatDrawer, ambitCorrutina)
+    CalaixDeNavegacio(controladorDeNavegacio, rutaActual, destinacioActual, estatDrawer, ambitCorrutina, controladorDAutenticacio)
 }
 
 @Composable
@@ -96,7 +100,8 @@ fun CalaixDeNavegacio(
     rutaActual: NavBackStackEntry?,
     destinacioActual: NavDestination?,
     estatDrawer: DrawerState,
-    ambitCorrutina: CoroutineScope
+    ambitCorrutina: CoroutineScope,
+    controladorDAutenticacio: ControladorDAutenticacio
 ) {
     ModalNavigationDrawer(
         drawerState = estatDrawer,
@@ -156,7 +161,7 @@ fun CalaixDeNavegacio(
         },
         gesturesEnabled = pantallesAmbDrawer.any { destinacioActual?.hasRoute(it) ?: true }
     ) {
-        Bastida(rutaActual, destinacioActual, controladorDeNavegacio, ambitCorrutina, estatDrawer)
+        Bastida(rutaActual, destinacioActual, controladorDeNavegacio, ambitCorrutina, estatDrawer, controladorDAutenticacio)
     }
 }
 
@@ -167,7 +172,8 @@ fun Bastida(
     destinacioActual: NavDestination?,
     controladorDeNavegacio: NavHostController,
     ambitDeCorrutina: CoroutineScope,
-    estatDrawer: DrawerState
+    estatDrawer: DrawerState,
+    controladorDAutenticacio: ControladorDAutenticacio
 ) {
     val titol = when {
         destinacioActual?.hasRoute(DestLeagues::class) == true -> "Lligues"
@@ -175,6 +181,8 @@ fun Bastida(
         destinacioActual?.hasRoute(DestPlayers::class) == true -> "Jugadors"
         else -> stringResource(R.string.app_name)
     }
+
+    val esLogin = destinacioActual?.hasRoute(DestiLogin::class) == true
 
     val esPantallaAmbDrawer = pantallesAmbDrawer.any { destinacioActual?.hasRoute(it) ?: true }
 
@@ -188,23 +196,37 @@ fun Bastida(
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 navigationIcon = {
-                    if (esPantallaAmbDrawer) {
-                        IconButton(onClick = {
-                            ambitDeCorrutina.launch {
-                                if (estatDrawer.isClosed) estatDrawer.open() else estatDrawer.close()
+                    when {
+                        esLogin -> {} // no mostra res
+
+                        esPantallaAmbDrawer -> {
+                            IconButton(onClick = {
+                                ambitDeCorrutina.launch {
+                                    if (estatDrawer.isClosed) estatDrawer.open() else estatDrawer.close()
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Menu,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimary
+                                )
                             }
-                        }) {
-                            Icon(imageVector = Icons.Default.Menu, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary)
                         }
-                    } else {
-                        IconButton(onClick = { controladorDeNavegacio.navigateUp() }) {
-                            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Enrere", tint = MaterialTheme.colorScheme.onPrimary)
+
+                        else -> {
+                            IconButton(onClick = { controladorDeNavegacio.navigateUp() }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Enrere",
+                                    tint = MaterialTheme.colorScheme.onPrimary
+                                )
+                            }
                         }
                     }
                 }
             )
         }
     ) { paddingValues ->
-        GrafDeNavegacio(controladorDeNavegacio, Modifier.padding(paddingValues))
+        GrafDeNavegacio(controladorDeNavegacio, controladorDAutenticacio, Modifier.padding(paddingValues))
     }
 }

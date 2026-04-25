@@ -7,22 +7,59 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import cat.arnaugilco.basketball.dades.autenticacio.ControladorDAutenticacio
 import cat.arnaugilco.basketball.ui.pantalles.PantallaEquips
 import cat.arnaugilco.basketball.ui.pantalles.PantallaJugadors
 import cat.arnaugilco.basketball.ui.pantalles.PantallaLligues
 import cat.arnaugilco.basketball.ui.pantalles.PantallaSeleccionDePais
 import cat.arnaugilco.basketball.ui.pantalles.general.PantallaInstruccions
 import cat.arnaugilco.basketball.ui.pantalles.general.PantallaPortada
+import cat.arnaugilco.basketball.ui.pantalles.login.PantallaLogin
+import cat.arnaugilco.basketball.ui.pantalles.perfil.PantallaPerfil
+import cat.arnaugilco.basketball.ui.pantalles.register.PantallaRegister
 import cat.montilivi.tmdb.ui.pantalles.PantallaPreferencies
 import cat.montilivi.tmdb.ui.pantalles.PantallaQuantA
 
 @Composable
-fun GrafDeNavegacio(controladorDeNavegacio: NavHostController = rememberNavController(), modifier: Modifier = Modifier)
+fun GrafDeNavegacio(
+    controladorDeNavegacio: NavHostController = rememberNavController(),
+    controladorDAutenticacio: ControladorDAutenticacio,
+    modifier: Modifier = Modifier)
 {
-    NavHost(navController = controladorDeNavegacio, startDestination = DestLandingPage, modifier = modifier)
+    val inici = DestiLogin
+
+    NavHost(navController = controladorDeNavegacio, startDestination = inici, modifier = modifier)
     {
-        composable<DestLandingPage>
-        {
+        composable<DestiLogin>{
+            PantallaLogin(
+                controladorAutenticacio = controladorDAutenticacio,
+                modifier = modifier,
+                navegaAInici = { controladorDeNavegacio.navigate(DestLandingPage) },
+                navegaARegistre = {
+                    controladorDeNavegacio.navigate(DestinacioRegistre)
+                },
+            )
+        }
+        composable<DestinacioPerfil> {
+            PantallaPerfil(
+                controladorAutenticacio = controladorDAutenticacio,
+                navegaALogin = {
+                    controladorDeNavegacio.navigate(DestiLogin) {
+                        popUpTo(0) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+        }
+        composable<DestinacioRegistre> {
+            PantallaRegister(
+                controladorAutenticacio = controladorDAutenticacio,
+                modifier = modifier,
+                navegaALogin = {controladorDeNavegacio.navigate(DestiLogin)}
+            )
+        }
+        composable<DestLandingPage> {
             PantallaPortada()
         }
         composable<DestCountrySelection> {
